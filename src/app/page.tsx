@@ -1,65 +1,113 @@
-import Image from "next/image";
+"use client";
+import { useState, useRef, useEffect } from "react";
+import Confetti from "react-confetti";
 
-export default function Home() {
+export default function Page() {
+  const [noCount, setNoCount] = useState(0);
+  const [yesPressed, setYesPressed] = useState(false);
+  const [windowSize, setWindowSize] = useState({ width: 0, height: 0 });
+  const audioRef = useRef<HTMLAudioElement>(null);
+
+  const yesButtonSize = noCount * 20 + 16;
+
+  // Track window size for Confetti
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowSize({ width: window.innerWidth, height: window.innerHeight });
+    };
+
+    // Set initial size
+    handleResize();
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const handleNoClick = () => {
+    setNoCount(noCount + 1);
+  };
+
+  const handleYesClick = () => {
+    setYesPressed(true);
+    if (audioRef.current) {
+      audioRef.current.volume = 0.5;
+      audioRef.current.play().catch((e) => console.log("Audio play failed:", e));
+    }
+  };
+
+  const getNoButtonText = () => {
+    const phrases = [
+      "No",
+      "Are you sure?",
+      "Really sure?",
+      "Think again!",
+      "Last chance!",
+      "Surely not?",
+      "You might regret this!",
+      "Give it another thought!",
+      "Are you absolutely certain?",
+      "This could be a mistake!",
+      "Have a heart!",
+      "Don't be so cold!",
+      "Change of heart?",
+      "Wouldn't you reconsider?",
+      "Is that your final answer?",
+      "You're breaking my heart ;(",
+    ];
+    return phrases[Math.min(noCount, phrases.length - 1)];
+  };
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+      <div className="flex flex-col items-center justify-center h-dvh w-screen bg-pink-50 text-center p-4 overflow-hidden relative">
+        <audio ref={audioRef} src="/music.mp3" loop />
+
+        {yesPressed && (
+            <div className="absolute top-0 left-0 w-full h-full z-50 pointer-events-none">
+              <Confetti width={windowSize.width} height={windowSize.height} />
+            </div>
+        )}
+
+        {yesPressed ? (
+            <div className="flex flex-col items-center justify-center animate-bounce">
+              <img
+                  src="https://media.tenor.com/gUiu1zyxfzYAAAAi/bear-kiss-bear-kisses.gif"
+                  className="max-w-[80vw] max-h-[40vh] object-contain"
+                  alt="Bears kissing"
+              />
+              <div className="text-4xl md:text-6xl font-bold my-4 text-rose-600">
+                Woohoo!!! ❤️
+              </div>
+            </div>
+        ) : (
+            <div className="flex flex-col items-center gap-6 w-full max-w-md">
+              <img
+                  className="max-w-[80vw] max-h-[35vh] object-contain drop-shadow-lg rounded-lg"
+                  src="https://gifdb.com/images/high/cute-love-bear-roses-ou7zho5oosxnpo6k.gif"
+                  alt="Bear with roses"
+              />
+
+              <h1 className="text-3xl md:text-5xl font-extrabold text-rose-600 px-4 leading-tight">
+                Will you be my Valentine?
+              </h1>
+
+              <div className="flex flex-wrap justify-center items-center gap-4 w-full px-2">
+                <button
+                    className="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-lg shadow-md transition-all duration-300 ease-in-out transform hover:scale-110"
+                    style={{ fontSize: yesButtonSize }}
+                    onClick={handleYesClick}
+                >
+                  Yes
+                </button>
+
+                <button
+                    onClick={handleNoClick}
+                    className="bg-red-500 hover:bg-red-600 text-white font-bold py-3 px-6 rounded-lg shadow-md transition-all duration-300"
+                >
+                  {noCount === 0 ? "No" : getNoButtonText()}
+                </button>
+              </div>
+            </div>
+        )}
+      </div>
   );
 }
