@@ -77,6 +77,9 @@ export default function Page() {
               <div className="text-4xl md:text-6xl font-bold my-4 text-rose-600">
                 Woohoo!!! ❤️
               </div>
+              <div className="text-4xl md:text-6xl font-bold my-4 text-rose-600">
+                Thank you for accepting my request Miss Ates Fangirl, Be ready for Valentine!!!
+              </div>
             </div>
         ) : (
             <div className="flex flex-col items-center gap-6 w-full max-w-md">
@@ -87,7 +90,7 @@ export default function Page() {
               />
 
               <h1 className="text-3xl md:text-5xl font-extrabold text-rose-600 px-4 leading-tight">
-                Will you be my Valentine?
+                Will you be my Valentine Miss Rameshwaram?
               </h1>
 
               <div className="flex flex-wrap justify-center items-center gap-4 w-full px-2">
